@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="container header-container">
+      <h1 class="logo">Tracker</h1>
+      <nav class="app-nav">
+        <button id="btn-settings" class="icon-btn" aria-label="Settings">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container main-content">
+    
+    <!-- Dashboard Section -->
+    <section class="dashboard" id="dashboard-section">
+      <div class="summary-cards">
+        <div class="card summary-card balance-card">
+          <h2 class="card-title">Net Balance</h2>
+          <p class="card-amount" id="summary-net">₹0.00</p>
+        </div>
+        <div class="card summary-card income-card">
+          <h2 class="card-title">Income</h2>
+          <p class="card-amount success" id="summary-income">₹0.00</p>
+        </div>
+        <div class="card summary-card expense-card">
+          <h2 class="card-title">Expenses</h2>
+          <p class="card-amount danger" id="summary-expense">₹0.00</p>
+        </div>
+      </div>
+
+      <!-- Budget & Visuals -->
+      <div class="dashboard-visuals">
+        <div class="card budget-card">
+          <div class="budget-header">
+            <h2 class="card-title">Monthly Budget</h2>
+            <span id="budget-status-text" class="budget-status">0%</span>
+          </div>
+          <div class="progress-bar-container">
+            <div id="budget-progress" class="progress-bar"></div>
+          </div>
+          <p class="budget-details" id="budget-details">Spent ₹0.00 of ₹0.00</p>
+          <div id="budget-warning" class="alert hidden">Warning: You are nearing your budget limit!</div>
+        </div>
+
+        <div class="card chart-card">
+          <h2 class="card-title">Spend Trend</h2>
+          <div class="chart-container" id="chart-container">
+            <!-- Canvas or SVG injected here -->
+            <canvas id="trend-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transactions Section -->
+    <section class="transactions-container section-mt">
+      <div class="section-header">
+        <h2>Recent Transactions</h2>
+        <div class="actions">
+          <button id="btn-export" class="btn btn-secondary btn-sm">Export</button>
+        </div>
+      </div>
+
+      <!-- Filters & Search -->
+      <div class="filters-bar card">
+        <div class="form-group search-group">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="filter-search" class="input" placeholder="Search notes..." aria-label="Search transactions">
+        </div>
+        <div class="filter-controls">
+          <select id="filter-type" class="input" aria-label="Filter by type">
+            <option value="all">All Types</option>
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+          </select>
+          <select id="filter-category" class="input" aria-label="Filter by category">
+            <option value="all">All Categories</option>
+            <!-- Injected by JS -->
+          </select>
+          <input type="month" id="filter-month" class="input" aria-label="Filter by month">
+        </div>
+      </div>
+
+      <!-- Transactions List -->
+      <div class="transactions-list" id="transactions-list">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating Add Button -->
+  <button id="btn-add-floating" class="fab" aria-label="Add Transaction">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+  </button>
+
+  <!-- MODALS -->
+
+  <!-- Add/Edit Modal -->
+  <div id="transaction-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h2 id="modal-title">Add Transaction</h2>
+        <button id="btn-close-modal" class="icon-btn" aria-label="Close modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <form id="transaction-form">
+        <input type="hidden" id="txn-id">
+        <div class="form-row type-toggle">
+          <label class="radio-label">
+            <input type="radio" name="txn-type" value="expense" checked>
+            <span class="radio-btn">Expense</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="txn-type" value="income">
+            <span class="radio-btn">Income</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="txn-amount">Amount <span class="required">*</span></label>
+          <input type="number" id="txn-amount" class="input input-large" step="0.01" min="0.01" required placeholder="0.00">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="txn-category">Category <span class="required">*</span></label>
+            <select id="txn-category" class="input" required>
+              <!-- Populated by JS -->
+            </select>
+          </div>
+          <div class="form-group half">
+            <label for="txn-date">Date <span class="required">*</span></label>
+            <input type="date" id="txn-date" class="input" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="txn-note">Note (Optional)</label>
+          <input type="text" id="txn-note" class="input" placeholder="Lunch at cafe...">
+        </div>
+
+        <div class="form-group">
+          <label for="txn-payment">Payment Method (Optional)</label>
+          <input type="text" id="txn-payment" class="input" placeholder="Credit Card, Cash, etc.">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-content card">
+      <div class="modal-header">
+        <h2 id="settings-title">Settings</h2>
+        <button id="btn-close-settings" class="icon-btn" aria-label="Close settings">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <form id="settings-form">
+        <div class="form-group">
+          <label for="setting-currency">Currency Symbol</label>
+          <input type="text" id="setting-currency" class="input" value="₹" required maxlength="5">
+        </div>
+        <div class="form-group">
+          <label for="setting-budget">Monthly Budget</label>
+          <input type="number" id="setting-budget" class="input" step="1" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label for="setting-start-week">Start of Week</label>
+          <select id="setting-start-week" class="input">
+            <option value="1">Monday</option>
+            <option value="0">Sunday</option>
+          </select>
+        </div>
+
+        <div class="settings-actions section-mt">
+          <h3>Data Management</h3>
+          <div class="data-buttons mt-2">
+            <button type="button" id="btn-import-trigger" class="btn btn-secondary btn-full">Import from JSON</button>
+            <input type="file" id="file-import" accept=".json" class="hidden">
+            <button type="button" id="btn-reset-data" class="btn btn-danger btn-full mt-2">Reset All Data</button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary btn-full">Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reset Confirmation Modal -->
+  <div id="reset-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="reset-title">
+    <div class="modal-content card modal-sm">
+      <div class="modal-header">
+        <h2 id="reset-title" class="danger">Reset All Data?</h2>
+      </div>
+      <p class="mt-2">This action cannot be undone. All your transactions and settings will be permanently deleted.</p>
+      <div class="modal-footer section-mt">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-reset">Cancel</button>
+        <button type="button" class="btn btn-danger" id="btn-confirm-reset">Yes, Delete Everything</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Snackbar / Toast for Undo -->
+  <div id="snackbar" class="snackbar hidden" role="alert">
+    <span id="snackbar-message">Transaction deleted.</span>
+    <button id="btn-undo" class="btn-text highlight">Undo</button>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
